@@ -1,4 +1,13 @@
-function get_same_elements(collection_a,collection_b) {
+function get_count(inp,tp,tp_inp) {
+  inp.forEach(function (val) {
+    tp[val.name] = tp[val.name] ? tp[val.name] + 1 : 1;
+  })
+  for (var i in tp) {
+    tp_inp.push({name: i, count: tp[i]});
+  }
+}
+
+function get_item_all_message(collection_a,collection_b) {
   collection_b.forEach(function(val) {
     if(val.name === collection_a.name) {
       collection_a["barcode"] = val.barcode;
@@ -9,70 +18,39 @@ function get_same_elements(collection_a,collection_b) {
   return collection_a;
 }
 
-function printReceipt(inputs) {
-  var result = '***<没钱赚商店>收据***\n';
-  var temp = {};
-  var temp_inputs = [];
-  inputs.forEach(function (val) {
-    temp[val.name] = temp[val.name] ? temp[val.name] + 1 : 1;
-  })
-  for (var i in temp) {
-    temp_inputs.push({name: i, count: temp[i]});
-  }
-  temp_inputs.forEach(function(item) {
-
-    get_same_elements(item,inputs);
-
-    result += '名称：' + val.name + '，' +
-      '数量：' + val.count + val.unit + '，' +
-      '单价：' + val.price + '.00' + '(元)' + '，' +
-      '小计：' + val.count * val.price + '.00' + '(元)' + '\n';
-  })
-
-  var sum = get_total_price(temp_inputs);
-
-  result += '----------------------\n' +
-    '总计：' + sum + '.00' + '(元)' + '\n' +
-    '**********************';
-  console.log(result);
+function get_print(item) {
+  return '名称：' + item.name + '，' +
+         '数量：' + item.count + item.unit + '，' +
+         '单价：' + item.price.toFixed(2) + '(元)' + '，' +
+         '小计：' + (item.count * item.price).toFixed(2) + '(元)' + '\n';
 }
 
-var get_total_price = function(item) {
+function get_total_price(item) {
   var total_price =0;
   item.forEach(function(val) {
     total_price += val.price * val.count;
   })
-  return total_price
+  return '----------------------\n' +
+         '总计：' + total_price + '.00' + '(元)' + '\n' +
+         '**********************';
 }
 
+function printReceipt(inputs) {
+  var result = '***<没钱赚商店>收据***\n';
+  var temp = {};
+  var temp_inputs = [];
 
+  get_count(inputs,temp,temp_inputs);
 
+  temp_inputs.forEach(function(item) {
 
+    get_item_all_message(item,inputs);
 
+    result += get_print(item);
+  })
 
+  result += get_total_price(temp_inputs);
 
+  console.log(result);
+}
 
-
-
-
-
-//    }
-//  })
-//  temp_inputs.forEach(function(val2) {
-//    result += print(val2,temp);
-//  })
-//  console.log(result);
-//}
-//
-//var print = function(collection,object) {
-//  for (var item in object) {
-//    if(collection.name === item) {
-//      var temp1 = '名称：' + collection.name + '，' +
-//                  '数量：' + object[item] + collection.unit + '，' +
-//                  '单价：' + collection.price + '.00' + '(元)' + '，' +
-//                  '小计：' + object[item] * collection.price + '.00' + '(元)' + '\n';
-//    }
-//  }
-//  return temp1;
-//}
-//
